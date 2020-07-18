@@ -185,10 +185,10 @@ inline void enableTermColors() {
     HANDLE outStream = GetStdHandle(-11);
     HANDLE outErrStream = GetStdHandle(-12);
 
-    if (isConsole(outStream)) {
+    if (winIsConsole(outStream)) {
         setTermMode(outStream);
     }
-    if (isConsole(outErrStream)) {
+    if (winIsConsole(outErrStream)) {
         setTermMode(outErrStream);
     }
 }
