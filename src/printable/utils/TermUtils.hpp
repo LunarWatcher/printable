@@ -32,7 +32,7 @@
 // End IO includes
 #include <memory>
 #include "EnvVariableHelper.hpp"
-#define WINDOZE
+
 namespace printable {
 
 namespace TermUtils {
