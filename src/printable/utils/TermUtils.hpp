@@ -44,7 +44,7 @@ inline void enableTermColors();
  */
 class TermData {
 private:
-    static std::shared_ptr<TermData> INSTANCE;
+    static inline std::shared_ptr<TermData> INSTANCE = nullptr;
 public:
     
     /**
@@ -71,8 +71,6 @@ public:
         return INSTANCE;
     }
 };
-
-std::shared_ptr<TermData> TermData::INSTANCE = nullptr;
 
 /**
  * Checks whether a given ostream is a terminal or not.
