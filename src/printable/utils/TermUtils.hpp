@@ -72,6 +72,8 @@ public:
     }
 };
 
+std::shared_ptr<TermData> TermData::INSTANCE = nullptr;
+
 /**
  * Checks whether a given ostream is a terminal or not.
  * To be more specific, it also checks whether std::cout
