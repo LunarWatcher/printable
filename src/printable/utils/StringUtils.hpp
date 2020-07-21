@@ -84,7 +84,7 @@ inline std::vector<std::string> wrapString(
                 content.push_back(mutCopy.substr(0, targetLenIdx) + "-");
                 mutCopy = mutCopy.substr(targetLenIdx);
             }
-            std::cout << mutCopy << std::endl;
+
 
         } while (mutCopy.length() > targetLength);
         content.push_back(mutCopy);

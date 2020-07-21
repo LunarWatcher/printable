@@ -81,7 +81,7 @@ public:
         output << std::setfill(' ');
         for (auto& row : this->rows) {
             // TODO: top border
-            output << "|"; // start the left border
+
             std::vector<std::vector<std::string>> lineOutputMatrix;
             auto cells = row.getCells();
 
@@ -94,7 +94,7 @@ public:
                 int lostWidth = 4; // Cell border + padding. TODO: replace with a calculation
                 auto len = cell.length();
                 std::vector<std::string> lines;
-                if (len < maxColumnWidth - lostWidth) {
+                if (len < maxColumnWidth - lostWidth && cell.find("\n") == std::string::npos) {
                     lines.push_back(cell);
                 } else {
                     lines = StringUtils::wrapString(cell, maxColumnWidth);
@@ -102,21 +102,25 @@ public:
                 if (lines.size() > lineOutputMatrix.size()) {
                     size_t oldSize = lineOutputMatrix.size();
                     lineOutputMatrix.resize(lines.size());
+
                     for (auto rowIdx = oldSize; rowIdx < lineOutputMatrix.size(); rowIdx++) {
-                        lineOutputMatrix.resize(i + 1);
+                        lineOutputMatrix[rowIdx].resize(i);
                     }
                 }
+
                 for (auto lineIdx = 0; lineIdx < lineOutputMatrix.size(); lineIdx++) {
                     if (lineIdx < lines.size()) {
+
                         // If we have a line for the position, add it
                         lineOutputMatrix[lineIdx].push_back(lines.at(lineIdx));
                     } else {
                         // Otherwise, add an empty item so we know that line is empty
-                        lineOutputMatrix.resize(i + 1);
+                        lineOutputMatrix[lineIdx].resize(i + 1);
                     }
                 }
             }
             for (auto& row : lineOutputMatrix) {
+                output << "|";
                 for (auto& column : row) {
                     output << " " // TODO: replace with format (padding and borders)
                               << std::left // TODO: replace with format (align)
