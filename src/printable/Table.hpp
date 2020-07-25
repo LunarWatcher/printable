@@ -79,10 +79,16 @@ public:
 
         std::stringstream output;
         output << std::setfill(' ');
+
+        std::vector<int> colWidths;
+        std::vector<std::vector<std::vector<std::string>>> rowLineOutputMatrix;
+
         for (auto& row : this->rows) {
             // TODO: top border
 
-            std::vector<std::vector<std::string>> lineOutputMatrix;
+            rowLineOutputMatrix.push_back({});
+            auto& lineOutputMatrix = rowLineOutputMatrix.back();
+
             auto cells = row.getCells();
 
             size_t maxHeight;
@@ -90,14 +96,15 @@ public:
             // Specifically, it lets us later calculate the matrix positions.
             for (auto i = 0; i < cells.size(); i++) {
                 auto cell = cells.at(i);
+                auto rawCellLength = cell.length();
 
                 int lostWidth = 4; // Cell border + padding. TODO: replace with a calculation
-                auto len = cell.length();
                 std::vector<std::string> lines;
-                if (len < maxColumnWidth - lostWidth && cell.find("\n") == std::string::npos) {
+                if (rawCellLength < maxColumnWidth - lostWidth && cell.find("\n") == std::string::npos) {
                     lines.push_back(cell);
                 } else {
-                    lines = StringUtils::wrapString(cell, maxColumnWidth);
+                    lines = StringUtils::wrapString(
+                            cell, maxColumnWidth - lostWidth); // - 4: accounting for padding and borders
                 }
                 if (lines.size() > lineOutputMatrix.size()) {
                     size_t oldSize = lineOutputMatrix.size();
@@ -109,28 +116,48 @@ public:
                 }
 
                 for (auto lineIdx = 0; lineIdx < lineOutputMatrix.size(); lineIdx++) {
+
                     if (lineIdx < lines.size()) {
+                        auto& line = lines.at(lineIdx);
+                        auto lineLen = line.length();
+                        if (i >= colWidths.size()) {
+                            colWidths.push_back(lineLen);
+                        } else {
+                            if (colWidths.at(i) < lineLen) {
+                                colWidths[i] = lineLen;
+                            }
+                        }
 
                         // If we have a line for the position, add it
-                        lineOutputMatrix[lineIdx].push_back(lines.at(lineIdx));
+                        lineOutputMatrix[lineIdx].push_back(line);
                     } else {
                         // Otherwise, add an empty item so we know that line is empty
                         lineOutputMatrix[lineIdx].resize(i + 1);
                     }
                 }
             }
-            for (auto& row : lineOutputMatrix) {
+        }
+
+        // The output system got messy fast... Here's a crash course
+        // A vector contains the rows (vertical units)
+        for (auto& row : rowLineOutputMatrix) {
+            // Each row contains lines (vertical subunit)
+            for (auto& line : row) {
                 output << "|";
-                for (auto& column : row) {
+                // Each line contains columns (horizontal units)
+                for (auto colIdx = 0; colIdx < line.size(); colIdx++) {
+                    auto& column = line.at(colIdx);
+                    auto targetWidth = colWidths.at(colIdx);
+                    std::cout << targetWidth << std::endl;
                     output << " " // TODO: replace with format (padding and borders)
-                              << std::left // TODO: replace with format (align)
-                              // - 4 is to account for the padding from "| " and " |"
-                              << std::setw(maxColumnWidth - 4) << column << " |";
+                           << std::left // TODO: replace with format (align)
+                           // targetWidth only factors in the length of the content, so it ignores padding
+                           << std::setw(targetWidth) << column << " |";
                 }
                 output << "\n";
             }
-
         }
+
         return output.str();
     }
 };
