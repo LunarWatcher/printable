@@ -1,3 +1,11 @@
+# Notice of abandonment
+
+One of the main issues I've been stuck on has been unicode, and I've been unable to figure it out. UTF-8 width support, at least for normal characters in other languages, is a minimum requirement for Taskranger, the project printable was made for.
+
+Several failed attempts towards unicode has made me spend more time working out a fix for unicode than writing the actual table library, and it's honestly something I don't properly understand how to handle at this time. As a result, I'm abandoning this project, at least for the time being, in favor of [a fork of tabulate](https://github.com/LunarWatcher/tabulate) with the necessary internal APIs exposed for me to write a function for Taskranger to deal with width. At the time of writing, said function exists and does work. I haven't added it to the fork because doing so involves more extensive testing to make sure it works. I might add it to the fork, and possibly the upstream variant in the future, but not for now.
+
+As such, this project is abandoned. I 'll most likely return to this in the future if I ever figure out unicode text width, but for now, I'd rather not spend a significant amount of time on text width.
+
 # printable
 
 C++17 header-only table printing library with terminal IO and environment utils.
